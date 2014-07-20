@@ -1,5 +1,5 @@
+#include <stdlib.h>
 #include <stdbool.h>
-#include <stdio.h>
 #include <math.h>
 
 #include <SDL2/SDL.h>
