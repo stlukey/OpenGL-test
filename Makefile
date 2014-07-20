@@ -23,14 +23,12 @@ OBJECTS := $(SOURCES:.c=.o)
 SHADERS := $(wildcard $(SHADERDIR)/*.glsl)
 SHADERS_H := $(SHADERS:.glsl=.glsl.h)
 
-fpic = -fpic
--include ${CURDIR}/Makefile.$(UNAME)
 
 $(TARGET): $(SHADERS_H) $(OBJECTS)
 	$(CC) $(CPPFLAGS) $(CFLAGS) -o $(TARGET) $(OBJECTS) $(LDFLAGS)
 
 %.o: %.c %.h $(SHADERS_H)
-	$(CC) $(fpic) $(CFLAGS) -c -o $@ $<
+	$(CC) -fpic $(CFLAGS) -c -o $@ $<
 
 %.glsl.h: %.glsl
 	sed -e 's/\\/\\\\/g;s/"/\\"/g;s/ /\\t/g;s/^/"/;s/$$/\\n"/' $< > $@
