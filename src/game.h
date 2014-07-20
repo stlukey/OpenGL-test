@@ -3,6 +3,15 @@
 
 #include <stdbool.h>
 
+struct GL_Ptrs {
+    GLuint vao, /* Vertex Array Object */
+           vbo, /* Vertex Buffer Object */
+           vs,  /* Vertex Shader */
+           fs,  /* Fragment Shader */
+           uni_color,
+           shader_prog;
+};
+
 /*******************************************************************
  *                          Game Object                            *
  *******************************************************************/
@@ -10,13 +19,7 @@
 typedef struct Game {
     bool running;
     int error;
-    struct GL_Ptrs {
-        GLuint vao, /* Vertex Array Object */
-               vbo, /* Vertex Buffer Object */
-               vs,  /* Vertex Shader */
-               fs,  /* Fragment Shader */
-               shader_prog;
-    } _gl_ptrs;
+    struct GL_Ptrs _gl_ptrs;
 } Game;
 
 /*** Constructor ***/
