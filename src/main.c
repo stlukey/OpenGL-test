@@ -14,7 +14,7 @@ int main(int argc, char * argv[])
     // in case of errors.
     SDL_Window    * window  = NULL;
     SDL_GLContext   context = NULL;
-    struct Game   * g       = NULL;
+    Game          * g       = NULL;
 
 
     SDL_Init(SDL_INIT_VIDEO);
