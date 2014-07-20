@@ -37,23 +37,23 @@ TARGET := bin/$(TARGET).exe
 win32: $(BIN) $(DLL) $(TARGET)
 
 $(BIN): clean
-        mkdir $(BIN)
-        cp $(DLLS)/SDL2.dll $(BIN)
-        cp $(DLLS)/glew32.dll $(BIN)
+	mkdir $(BIN)
+	cp $(DLLS)/SDL2.dll $(BIN)
+	cp $(DLLS)/glew32.dll $(BIN)
 
 winzip: win32
-        cd $(BIN) && zip $(basename $(notdir $(TARGET))).zip *
+	cd $(BIN) && zip $(basename $(notdir $(TARGET))).zip *
 
 
 $(TARGET): $(SHADERS_H) $(OBJECTS)
-        $(CC) $(CPPFLAGS) $(CFLAGS) -o $(TARGET) $(OBJECTS) $(LDFLAGS)
+	$(CC) $(CPPFLAGS) $(CFLAGS) -o $(TARGET) $(OBJECTS) $(LDFLAGS)
 
 %.o: %.c %.h $(SHADERS_H)
-        $(CC) $(CFLAGS) -c -o $@ $<
+	$(CC) $(CFLAGS) -c -o $@ $<
 
 %.glsl.h: %.glsl
-        sed -e "s/\\/\\\\/g;s/\"/\\\"/g;s/ /\\t/g;s/^/\"/;s/$$/\\n\"/" $< > $@
+	sed -e "s/\\/\\\\/g;s/\"/\\\"/g;s/ /\\t/g;s/^/\"/;s/$$/\\n\"/" $< > $@
 
 clean:
-        rm -fr $(TARGET) $(OBJECTS) $(SHADERS_H) $(BIN)
+	rm -fr $(TARGET) $(OBJECTS) $(SHADERS_H) $(BIN)
 
