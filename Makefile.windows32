@@ -1,0 +1,26 @@
+CC = i686-w64-mingw32-gcc
+
+CPPFLAGS += -Dmain=SDL_main
+
+LDFLAGS =  -lmingw32 -mwindows
+LDFLAGS += -lSDL2main -lSDL2 
+LDFLAGS += -lopengl32
+LDFLAGS += -lm
+LDFLAGS += -lglew32
+
+DLLS = /usr/i686-w64-mingw32/bin
+
+TARGET := bin/$(TARGET).exe
+
+fpic:=
+
+win32: $(BIN) $(DLL) $(TARGET)
+
+$(BIN):
+	mkdir -p $(BIN)
+	cp $(DLLS)/SDL2.dll $(BIN)
+	cp $(DLLS)/glew32.dll $(BIN)
+
+winzip: win32
+	zip $(BIN)/$(basename $(notdir $(TARGET))).zip $(BIN)/*
+
