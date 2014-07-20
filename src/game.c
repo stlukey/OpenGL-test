@@ -1,4 +1,5 @@
 #include <stdbool.h>
+#include <stdio.h>
 #include <math.h>
 
 #include <SDL2/SDL.h>
@@ -137,7 +138,7 @@ void game__gl_init(struct GL_Ptrs * glp)
                           5 * sizeof(GLfloat), (void *)(2 * sizeof(GLfloat)));
 
     // Uniforms
-    glp->uni_color = glGetUniformLocation(glp->shader_prog, "color_mod");
+    glp->uni_color = glGetUniformLocation(glp->shader_prog, "time_mod");
 }
 
 void game__gl_destroy(struct GL_Ptrs * glp)
