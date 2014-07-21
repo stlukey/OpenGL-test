@@ -53,7 +53,7 @@ int main(int argc, char * argv[])
     }
 
     // Clean up
-    DELETE(game, g);
+    DEL(game, g);
     SDL_GL_DeleteContext(context);
     SDL_DestroyWindow(window);
 
@@ -63,7 +63,7 @@ int main(int argc, char * argv[])
 
 error:
     // All vars are initially NULL.
-    if( g       != NULL ) DELETE(game, g);
+    if( g       != NULL ) DEL(game, g);
     if( context != NULL ) SDL_GL_DeleteContext(context);
     if( window  != NULL ) SDL_DestroyWindow(window);
 
