@@ -26,6 +26,12 @@ void game__init__(Game * self)
     self->running = true;
 }
 
+void game__del__(Game * self)
+{
+    game__gl_del(&self->_gl_ptrs);
+    free(self);
+}
+
 void game_events(Game * self)
 {
     if (self->error != 0 ) return;
@@ -72,12 +78,6 @@ void game_draw(Game * self)
     glDrawArrays(GL_TRIANGLES, 0, 3);
 }
 
-void game__del__(Game * self)
-{
-    game__gl_del(&self->_gl_ptrs);
-    free(self);
-}
-
 void game__gl_init(struct GL_Ptrs * glp)
 {
     glp->vao = 0; glp->vbo = 0;
@@ -86,10 +86,10 @@ void game__gl_init(struct GL_Ptrs * glp)
     glp->uni_color = 0;
 
     // `glp->*s` src
-    const GLchar* vert_src =
+    const GLchar * vert_src =
         #include "shaders/vs.glsl.h"
     ;
-    const GLchar* frag_src =
+    const GLchar * frag_src =
         #include "shaders/fs.glsl.h"
     ;
 
