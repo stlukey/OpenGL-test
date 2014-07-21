@@ -35,7 +35,7 @@ int main(int argc, char * argv[])
     glewExperimental = GL_TRUE;
     glewInit();
 
-    g = game_new();
+    g = NEW(game);
     check( (g != NULL) && (g->error == 0),
            "Failed to create game.");
 
@@ -47,13 +47,13 @@ int main(int argc, char * argv[])
         game_draw(g);
     
         check( g->error == 0,
-              " Game encountered errors.");
+              "Game encountered errors.");
 
         SDL_GL_SwapWindow(window);
     }
 
     // Clean up
-    game_destroy(g);
+    DELETE(game, g);
     SDL_GL_DeleteContext(context);
     SDL_DestroyWindow(window);
 
@@ -63,7 +63,7 @@ int main(int argc, char * argv[])
 
 error:
     // All vars are initially NULL.
-    if( g       != NULL ) game_destroy(g);
+    if( g       != NULL ) DELETE(game, g);
     if( context != NULL ) SDL_GL_DeleteContext(context);
     if( window  != NULL ) SDL_DestroyWindow(window);
 

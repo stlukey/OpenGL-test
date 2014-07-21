@@ -7,7 +7,7 @@
 
 #include "game.h"
 
-Game * game_new()
+Game * game__new__()
 {
     Game * self = malloc(sizeof(Game));
     
@@ -72,9 +72,9 @@ void game_draw(Game * self)
     glDrawArrays(GL_TRIANGLES, 0, 3);
 }
 
-void game_destroy(Game * self)
+void game__del__(Game * self)
 {
-    game__gl_destroy(&self->_gl_ptrs);
+    game__gl_del(&self->_gl_ptrs);
     free(self);
 }
 
@@ -141,7 +141,7 @@ void game__gl_init(struct GL_Ptrs * glp)
     glp->uni_color = glGetUniformLocation(glp->shader_prog, "time_mod");
 }
 
-void game__gl_destroy(struct GL_Ptrs * glp)
+void game__gl_del(struct GL_Ptrs * glp)
 {
     if( glp->shader_prog != 0 ) glDeleteProgram(glp->shader_prog);
     if( glp->fs != 0 ) glDeleteShader(glp->fs);

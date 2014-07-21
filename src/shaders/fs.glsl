@@ -10,3 +10,4 @@ void main()
 {
    out_color = vec4(Color * time_mod, 1.0);
 }
+

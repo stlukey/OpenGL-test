@@ -3,6 +3,8 @@
 
 #include <stdbool.h>
 
+#include "objects.h"
+
 struct GL_Ptrs {
     GLuint vao, /* Vertex Array Object */
            vbo, /* Vertex Buffer Object */
@@ -22,24 +24,25 @@ typedef struct Game {
     struct GL_Ptrs _gl_ptrs;
 } Game;
 
-/*** Constructor ***/
-Game * game_new();
+/*** Special Methods ***/
+Game * game__new__();            /* Call via NEW(game) */
+void   game__del__(Game * self); /* Call via DELETE(game, self) */
 
 
 /*** Public Methods ***/
-void game_events      (Game           * self);
-void game_update      (Game           * self);
-void game_draw        (Game           * self);
-void game_destroy     (Game           * self);
+void game_events   (Game           * self);
+void game_update   (Game           * self);
+void game_draw     (Game           * self);
 
 /*** Private Methods ***/
-void game__init__     (Game           * self);
-void game__end        (Game           * self);
+void game__init__  (Game           * self);
+void game__end     (Game           * self);
 
-void game__gl_init    (struct GL_Ptrs * glp);
-void game__gl_destroy (struct GL_Ptrs * glp);
+void game__gl_init (struct GL_Ptrs * glp);
+void game__gl_del  (struct GL_Ptrs * glp);
 
 /*******************************************************************
  *******************************************************************/
 
 #endif // _GAME_H_
+
