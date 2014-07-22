@@ -6,12 +6,21 @@
 #include <GL/glew.h>
 
 #include "game.h"
+#include "shaders.h"
 
 Game * Game__new__()
 {
     Game * self = malloc(sizeof(Game));
     
+    self->vs = NULL; self->fs = NULL;
+    self->sp = NULL;
+    self->vao = 0; self->vbo = 0;
+    self->uni_time = 0;
+    self->error = 0;
+    self->running = true;
+    
     Game__init__(self);
+
 
     return self;
     
@@ -19,16 +28,63 @@ Game * Game__new__()
 
 void Game__init__(Game * self)
 {
-    self->error = 0;
+    const GLchar * vert_src =
+        #include "shaders/vs.glsl.h"
+    ;
+    const GLchar * frag_src =
+        #include "shaders/fs.glsl.h"
+    ;
 
-    game__gl_init(&self->_gl_ptrs);
+    glGenBuffers(1, &self->vbo);
+    GLfloat vertices[] = {
+         0.0f,  0.5f, 1.0f, 0.0f, 0.0f,
+         0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+        -0.5f, -0.5f, 0.0f, 0.0f, 1.0f
+    };
+    glBindBuffer(GL_ARRAY_BUFFER, self->vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    
+    self->vs = NEW(Shader, GL_VERTEX_SHADER, vert_src);
+    self->fs = NEW(Shader, GL_FRAGMENT_SHADER, frag_src);
 
-    self->running = true;
+    self->sp = NEW(ShaderProg, &self->vao,
+                               &self->vbo,
+                               self->vs,
+                               self->fs,
+                               NULL);
+    glBindFragDataLocation(self->sp->ptr, 0, "out_color");
+    shader_prog_link(self->sp);
+    shader_prog_use(self->sp);
+
+    GLint pos_attr = shader_prog_attrib(self->sp, "position");
+    glEnableVertexAttribArray(pos_attr);
+    glVertexAttribPointer(pos_attr, 2, GL_FLOAT, GL_FALSE,
+                          5 * sizeof(GLfloat), 0);
+
+
+    GLint col_attr = shader_prog_attrib(self->sp, "color");
+    glEnableVertexAttribArray(col_attr);
+    glVertexAttribPointer(col_attr, 3, GL_FLOAT, GL_FALSE,
+                          5 * sizeof(GLfloat), (void *)(2 * sizeof(GLfloat)));
+
+    self->uni_time = shader_prog_uniform(self->sp, "time_mod");
 }
 
 void Game__del__(Game * self)
 {
-    game__gl_del(&self->_gl_ptrs);
+    if( self->sp != NULL )
+        DEL(ShaderProg, self->sp);
+    if( self->vs != NULL )
+        DEL(Shader, self->vs);
+    if( self->fs != NULL )
+        DEL(Shader, self->fs);
+
+    if( self->vbo != 0 )
+        glDeleteBuffers(1, &self->vbo);
+
+    if( self->vao != 0 )
+        glDeleteVertexArrays(1, &self->vao);
+
     free(self);
 }
 
@@ -61,9 +117,8 @@ void game_update(Game * self)
 {
     if (self->error != 0 ) return;
     
-    struct GL_Ptrs * glp = &self->_gl_ptrs; 
     GLfloat time_mod = sin(SDL_GetTicks() / 500.0f) + 0.5f;
-    glUniform3f(glp->uni_time, time_mod, time_mod, time_mod);
+    glUniform3f(self->uni_time, time_mod, time_mod, time_mod);
 }
 
 void game_draw(Game * self)
@@ -76,80 +131,6 @@ void game_draw(Game * self)
     
     // Draw a triangle from the 3 vertices
     glDrawArrays(GL_TRIANGLES, 0, 3);
-}
-
-void game__gl_init(struct GL_Ptrs * glp)
-{
-    glp->vao = 0; glp->vbo = 0;
-    glp->vs = 0;  glp->fs = 0;
-    glp->shader_prog = 0;
-    glp->uni_time = 0;
-
-    // `glp->*s` src
-    const GLchar * vert_src =
-        #include "shaders/vs.glsl.h"
-    ;
-    const GLchar * frag_src =
-        #include "shaders/fs.glsl.h"
-    ;
-
-    // Create `glp->vao`
-    glGenVertexArrays(1, &glp->vao);
-    glBindVertexArray(glp->vao);
-
-    // Create `glp->vbo` and copy data
-    glGenBuffers(1, &glp->vbo);
-    GLfloat vertices[] = {
-         0.0f,  0.5f, 1.0f, 0.0f, 0.0f,
-         0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
-        -0.5f, -0.5f, 0.0f, 0.0f, 1.0f
-    };
-    glBindBuffer(GL_ARRAY_BUFFER, glp->vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-
-    // Compile `glp->*s`
-    glp->vs = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(glp->vs, 1, &vert_src, NULL);
-    glCompileShader(glp->vs);
-
-    glp->fs = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(glp->fs, 1, &frag_src, NULL);
-    glCompileShader(glp->fs);
-
-
-    // Linking `glp->*s` into `glp->shader_prog`
-    glp->shader_prog = glCreateProgram();
-    glAttachShader(glp->shader_prog, glp->vs);
-    glAttachShader(glp->shader_prog, glp->fs);
-    glBindFragDataLocation(glp->shader_prog, 0, "out_color");
-    glLinkProgram(glp->shader_prog);
-    glUseProgram(glp->shader_prog);
-
-    // Layout of `vertices`
-    GLint pos_attr = glGetAttribLocation(glp->shader_prog, "position");
-    glEnableVertexAttribArray(pos_attr);
-    glVertexAttribPointer(pos_attr, 2, GL_FLOAT, GL_FALSE,
-                          5 * sizeof(GLfloat), 0);
-
-    GLint col_attr = glGetAttribLocation(glp->shader_prog, "color");
-    glEnableVertexAttribArray(col_attr);
-    glVertexAttribPointer(col_attr, 3, GL_FLOAT, GL_FALSE,
-                          5 * sizeof(GLfloat), (void *)(2 * sizeof(GLfloat)));
-
-    // Uniforms
-    glp->uni_time = glGetUniformLocation(glp->shader_prog, "time_mod");
-}
-
-void game__gl_del(struct GL_Ptrs * glp)
-{
-    if( glp->shader_prog != 0 ) glDeleteProgram(glp->shader_prog);
-    if( glp->fs != 0 ) glDeleteShader(glp->fs);
-    if( glp->vs != 0 ) glDeleteShader(glp->vs);
-
-    if( glp->vbo != 0 ) glDeleteBuffers(1, &glp->vbo);
-
-    if( glp->vao != 0 ) glDeleteVertexArrays(1, &glp->vao);
 }
 
 void game__end(Game * self)

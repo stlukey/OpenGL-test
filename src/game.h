@@ -4,14 +4,7 @@
 #include <stdbool.h>
 
 #include "objects.h"
-
-struct GL_Ptrs {
-    GLuint vao, /* Vertex Array Object */
-           vbo, /* Vertex Buffer Object */
-           vs,  /* Vertex Shader */
-           fs,  /* Fragment Shader */
-           uni_time, shader_prog;
-};
+#include "shaders.h"
 
 /*******************************************************************
  *                          Game Object                            *
@@ -20,12 +13,15 @@ struct GL_Ptrs {
 typedef struct Game {
     bool running;
     int error;
-    struct GL_Ptrs _gl_ptrs;
+    Shader     * vs, * fs;
+    ShaderProg * sp;
+    GLuint vao, vbo;
+    GLuint uni_time;
 } Game;
 
 /*** Special Methods ***/
 Game * Game__new__ ();            /* Call via NEW(game) */
-void   Game__init__(Game * self); /* Called by __new__ */
+void   Game__init__(Game * self); /* Called by NEW(game) */
 void   Game__del__ (Game * self); /* Call via DEL(game, self) */
 
 
@@ -36,9 +32,6 @@ void game_draw     (Game           * self);
 
 /*** Private Methods ***/
 void game__end     (Game           * self);
-
-void game__gl_init (struct GL_Ptrs * glp);
-void game__gl_del  (struct GL_Ptrs * glp);
 
 /*******************************************************************
  *******************************************************************/
