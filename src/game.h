@@ -26,7 +26,7 @@ typedef struct Game {
 /*** Special Methods ***/
 Game * Game__new__ ();            /* Call via NEW(game) */
 void   Game__init__(Game * self); /* Called by __new__ */
-void   Game__del__ (Game * self); /* Call via DELETE(game, self) */
+void   Game__del__ (Game * self); /* Call via DEL(game, self) */
 
 
 /*** Public Methods ***/
