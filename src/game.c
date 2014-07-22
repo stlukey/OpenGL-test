@@ -21,6 +21,7 @@ Game * Game__new__()
     self->error = 0;
     self->running = true;
     self->pause = 0;
+    self->time_mod = SDL_GetTicks() / 150.0f;
 
     Game__init__(self);
 
@@ -120,8 +121,9 @@ void game_update(Game * self)
 {
     if (self->error != 0 ) return;
     
-    GLfloat time_mod = (1 * !self->pause) + ((sin(SDL_GetTicks() / 500.0f) + 0.5f) * self->pause);
+    GLfloat time_mod = (self->time_mod * !self->pause) + ((sin(SDL_GetTicks() / 500.0f) + 0.5f) * self->pause);
     glUniform4f(self->uni_time, time_mod, time_mod, time_mod, SDL_GetTicks() / 60.0f);
+    self->time_mod = time_mod;
 }
 
 void game_draw(Game * self)

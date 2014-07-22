@@ -17,6 +17,7 @@ typedef struct Game {
     ShaderProg * sp;
     GLuint vao, vbo;
     GLuint uni_time;
+    GLfloat time_mod;
 } Game;
 
 /*** Special Methods ***/
