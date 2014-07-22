@@ -10,8 +10,7 @@ struct GL_Ptrs {
            vbo, /* Vertex Buffer Object */
            vs,  /* Vertex Shader */
            fs,  /* Fragment Shader */
-           uni_color,
-           shader_prog;
+           uni_time, shader_prog;
 };
 
 /*******************************************************************

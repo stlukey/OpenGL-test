@@ -63,7 +63,7 @@ void game_update(Game * self)
     
     struct GL_Ptrs * glp = &self->_gl_ptrs; 
     GLfloat time_mod = sin(SDL_GetTicks() / 500.0f) + 0.5f;
-    glUniform3f(glp->uni_color, time_mod, time_mod, time_mod);
+    glUniform3f(glp->uni_time, time_mod, time_mod, time_mod);
 }
 
 void game_draw(Game * self)
@@ -83,7 +83,7 @@ void game__gl_init(struct GL_Ptrs * glp)
     glp->vao = 0; glp->vbo = 0;
     glp->vs = 0;  glp->fs = 0;
     glp->shader_prog = 0;
-    glp->uni_color = 0;
+    glp->uni_time = 0;
 
     // `glp->*s` src
     const GLchar * vert_src =
@@ -138,7 +138,7 @@ void game__gl_init(struct GL_Ptrs * glp)
                           5 * sizeof(GLfloat), (void *)(2 * sizeof(GLfloat)));
 
     // Uniforms
-    glp->uni_color = glGetUniformLocation(glp->shader_prog, "time_mod");
+    glp->uni_time = glGetUniformLocation(glp->shader_prog, "time_mod");
 }
 
 void game__gl_del(struct GL_Ptrs * glp)
