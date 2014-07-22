@@ -35,6 +35,9 @@ void Game__init__(Game * self)
         #include "shaders/fs.glsl.h"
     ;
 
+    glGenVertexArrays(1, &self->vao);
+    glBindVertexArray(self->vao);
+
     glGenBuffers(1, &self->vbo);
     GLfloat vertices[] = {
          0.0f,  0.5f, 1.0f, 0.0f, 0.0f,
