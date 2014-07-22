@@ -24,7 +24,7 @@ void     Shader__init__(Shader * self);
 void     Shader__del__ (Shader * self);       /* DEL(game, self) */
 
 /*** Static Methods ***/
-GLchar * shader_getsrc (char * filename);
+const GLchar * shader_getsrc (char * filename);
 
 
 /*******************************************************************

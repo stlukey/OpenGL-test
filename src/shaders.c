@@ -1,7 +1,10 @@
 #include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
 #include <GL/glew.h>
 
 #include "shaders.h"
+#include "config.h"
 
 /*******************************************************************
  *                        Shader Methods                           *
@@ -36,9 +39,35 @@ void Shader__del__(Shader * self)
    free(self);
 }
 
-GLchar * shader_getsrc(char * filename)
+
+
+const GLchar * shader_getsrc(char * shadername)
 {
-    return "";
+    const char * prefix = SHADERS_PATH;
+    size_t s_len = strlen(shadername);
+    size_t p_len = strlen(prefix);
+    char * filename = malloc(s_len + p_len + 1);
+    memcpy(filename, prefix, p_len);
+    memcpy(filename + p_len, shadername, s_len + 1);
+
+    char * src = NULL;
+    FILE * fp =  fopen(filename, "rb");
+    free(filename);
+
+    if( fp ) {
+        fseek(fp, 0, SEEK_END);
+        long len = ftell(fp);
+        fseek(fp, 0, SEEK_SET);
+
+        src = malloc(len);
+        if( src )
+            (void)(fread(src, 1, len, fp) + 1);
+
+        fclose(fp);
+        src[len] = '\0';
+    }
+
+    return (const GLchar *)src;
 }
 
 /*******************************************************************

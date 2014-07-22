@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdbool.h>
+#include <stdio.h>
 #include <math.h>
 
 #include <SDL2/SDL.h>
@@ -7,6 +8,7 @@
 
 #include "game.h"
 #include "shaders.h"
+#include "dbg.h"
 
 Game * Game__new__()
 {
@@ -28,12 +30,13 @@ Game * Game__new__()
 
 void Game__init__(Game * self)
 {
-    const GLchar * vert_src =
-        #include "shaders/vs.glsl.h"
-    ;
-    const GLchar * frag_src =
-        #include "shaders/fs.glsl.h"
-    ;
+    const GLchar * vert_src = shader_getsrc("vs.glsl");
+    check(vert_src != NULL,
+          "Could not load vertex shader source code.");
+
+    const GLchar * frag_src = shader_getsrc("fs.glsl");
+    check(vert_src != NULL,
+          "Could not load fragment shader source code.");
 
     game__load_vertex_data(self);
     
@@ -53,6 +56,10 @@ void Game__init__(Game * self)
 
     game__set_uniforms(self);
 
+    return;
+
+error:
+    self->error = 1;
 }
 
 void Game__del__(Game * self)
@@ -93,6 +100,10 @@ void game_events(Game * self)
         switch( key ) {
             case SDLK_ESCAPE:
                 return game__end(self);
+            case SDLK_F5:
+                log_info("Restarting game...");
+                DEL(Game, self);
+                self = NEW(Game);
         }
         key = 0;
     }
