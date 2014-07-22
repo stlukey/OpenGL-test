@@ -12,7 +12,7 @@
 
 typedef struct Game {
     bool running;
-    int error;
+    int error, pause;
     Shader     * vs, * fs;
     ShaderProg * sp;
     GLuint vao, vbo;

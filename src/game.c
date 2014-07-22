@@ -20,7 +20,8 @@ Game * Game__new__()
     self->uni_time = 0;
     self->error = 0;
     self->running = true;
-    
+    self->pause = 0;
+
     Game__init__(self);
 
 
@@ -100,10 +101,16 @@ void game_events(Game * self)
         switch( key ) {
             case SDLK_ESCAPE:
                 return game__end(self);
+
             case SDLK_F5:
                 log_info("Restarting game...");
                 DEL(Game, self);
                 self = NEW(Game);
+                break;
+
+            case SDLK_p:
+                self->pause = !self->pause;
+                break;
         }
         key = 0;
     }
@@ -113,8 +120,8 @@ void game_update(Game * self)
 {
     if (self->error != 0 ) return;
     
-    GLfloat time_mod = sin(SDL_GetTicks() / 500.0f) + 0.5f;
-    glUniform3f(self->uni_time, time_mod, time_mod, time_mod);
+    GLfloat time_mod = (1 * !self->pause) + ((sin(SDL_GetTicks() / 500.0f) + 0.5f) * self->pause);
+    glUniform4f(self->uni_time, time_mod, time_mod, time_mod, SDL_GetTicks() / 60.0f);
 }
 
 void game_draw(Game * self)
