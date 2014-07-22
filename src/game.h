@@ -25,8 +25,9 @@ typedef struct Game {
 } Game;
 
 /*** Special Methods ***/
-Game * game__new__();            /* Call via NEW(game) */
-void   game__del__(Game * self); /* Call via DELETE(game, self) */
+Game * Game__new__ ();            /* Call via NEW(game) */
+void   Game__init__(Game * self); /* Called by __new__ */
+void   Game__del__ (Game * self); /* Call via DELETE(game, self) */
 
 
 /*** Public Methods ***/
@@ -35,7 +36,6 @@ void game_update   (Game           * self);
 void game_draw     (Game           * self);
 
 /*** Private Methods ***/
-void game__init__  (Game           * self);
 void game__end     (Game           * self);
 
 void game__gl_init (struct GL_Ptrs * glp);

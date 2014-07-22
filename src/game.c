@@ -7,17 +7,17 @@
 
 #include "game.h"
 
-Game * game__new__()
+Game * Game__new__()
 {
     Game * self = malloc(sizeof(Game));
     
-    game__init__(self);
+    Game__init__(self);
 
     return self;
     
 }
 
-void game__init__(Game * self)
+void Game__init__(Game * self)
 {
     self->error = 0;
 
@@ -26,7 +26,7 @@ void game__init__(Game * self)
     self->running = true;
 }
 
-void game__del__(Game * self)
+void Game__del__(Game * self)
 {
     game__gl_del(&self->_gl_ptrs);
     free(self);
