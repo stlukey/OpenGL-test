@@ -5,6 +5,7 @@
 
 #include "shaders.h"
 #include "config.h"
+#include "dbg.h"
 
 /*******************************************************************
  *                        Shader Methods                           *
@@ -29,6 +30,25 @@ void Shader__init__(Shader * self)
     self->ptr = glCreateShader(self->type);
     glShaderSource(self->ptr, 1, &self->src, NULL);
     glCompileShader(self->ptr);
+
+    int result = 0;
+    glGetShaderiv(self->ptr, GL_COMPILE_STATUS, &result);
+
+    int log_len = 0;
+    glGetShaderiv(self->ptr, GL_INFO_LOG_LENGTH, &log_len);
+
+    if( log_len > 0 ) {
+        char * log = malloc(log_len);
+        glGetShaderInfoLog(self->ptr, log_len, NULL, log);
+        if( result == GL_FALSE ) {
+            log_err("Error compiling shader: \n%s", log);
+            self->error = 1;
+        } else {
+            log_warn("Warning compiling shader: \n%s", log);
+        }
+        free(log);
+    }
+
 }
 
 void Shader__del__(Shader * self)
@@ -38,8 +58,6 @@ void Shader__del__(Shader * self)
 
    free(self);
 }
-
-
 
 const GLchar * shader_getsrc(char * shadername)
 {

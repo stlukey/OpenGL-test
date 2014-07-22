@@ -8,6 +8,6 @@ out vec4 out_color;
 
 void main()
 {
-   out_color = vec4(Color * time_mod, 1.0);
+    out_color = vec4(Color * time_mod, 1.0);
 }
 
