@@ -1,4 +1,4 @@
-#version 150 core
+#version 130
 
 uniform vec4 time_mod;
 
