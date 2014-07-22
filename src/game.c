@@ -35,17 +35,7 @@ void Game__init__(Game * self)
         #include "shaders/fs.glsl.h"
     ;
 
-    glGenVertexArrays(1, &self->vao);
-    glBindVertexArray(self->vao);
-
-    glGenBuffers(1, &self->vbo);
-    GLfloat vertices[] = {
-         0.0f,  0.5f, 1.0f, 0.0f, 0.0f,
-         0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
-        -0.5f, -0.5f, 0.0f, 0.0f, 1.0f
-    };
-    glBindBuffer(GL_ARRAY_BUFFER, self->vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    game__load_vertex_data(self);
     
     self->vs = NEW(Shader, GL_VERTEX_SHADER, vert_src);
     self->fs = NEW(Shader, GL_FRAGMENT_SHADER, frag_src);
@@ -58,19 +48,11 @@ void Game__init__(Game * self)
     glBindFragDataLocation(self->sp->ptr, 0, "out_color");
     shader_prog_link(self->sp);
     shader_prog_use(self->sp);
+    
+    game__set_vertex_data_layout(self);
 
-    GLint pos_attr = shader_prog_attrib(self->sp, "position");
-    glEnableVertexAttribArray(pos_attr);
-    glVertexAttribPointer(pos_attr, 2, GL_FLOAT, GL_FALSE,
-                          5 * sizeof(GLfloat), 0);
+    game__set_uniforms(self);
 
-
-    GLint col_attr = shader_prog_attrib(self->sp, "color");
-    glEnableVertexAttribArray(col_attr);
-    glVertexAttribPointer(col_attr, 3, GL_FLOAT, GL_FALSE,
-                          5 * sizeof(GLfloat), (void *)(2 * sizeof(GLfloat)));
-
-    self->uni_time = shader_prog_uniform(self->sp, "time_mod");
 }
 
 void Game__del__(Game * self)
@@ -141,4 +123,37 @@ void game__end(Game * self)
     self->running = false;
 }
 
+void game__load_vertex_data(Game * self)
+{
+    glGenVertexArrays(1, &self->vao);
+    glBindVertexArray(self->vao);
+
+    glGenBuffers(1, &self->vbo);
+    GLfloat vertices[] = {
+         0.0f,  0.5f, 1.0f, 0.0f, 0.0f,
+         0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+        -0.5f, -0.5f, 0.0f, 0.0f, 1.0f
+    };
+    glBindBuffer(GL_ARRAY_BUFFER, self->vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+}
+
+void game__set_vertex_data_layout(Game * self)
+{
+    GLint pos_attr = shader_prog_attrib(self->sp, "position");
+    glEnableVertexAttribArray(pos_attr);
+    glVertexAttribPointer(pos_attr, 2, GL_FLOAT, GL_FALSE,
+                          5 * sizeof(GLfloat), 0);
+
+
+    GLint col_attr = shader_prog_attrib(self->sp, "color");
+    glEnableVertexAttribArray(col_attr);
+    glVertexAttribPointer(col_attr, 3, GL_FLOAT, GL_FALSE,
+                          5 * sizeof(GLfloat), (void *)(2 * sizeof(GLfloat)));
+}
+
+void game__set_uniforms(Game * self)
+{
+    self->uni_time = shader_prog_uniform(self->sp, "time_mod");
+}
 
