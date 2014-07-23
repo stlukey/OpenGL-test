@@ -16,7 +16,7 @@ vec2 rotate(vec2 p)
 void main()
 { 
 
-	vec2 pos = gl_FragCoord.xy / vec2(1280, 1024) * 2. - 1.; 
+	vec2 pos = gl_FragCoord.xy / vec2(800, 400) * 2. - 1.; 
 
 	pos = rotate(pos); 
 
