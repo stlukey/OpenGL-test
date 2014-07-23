@@ -20,8 +20,8 @@ SHADERDIR = $(SRC)/shaders
 SOURCES := $(wildcard $(SRC)/*.c)
 OBJECTS := $(SOURCES:.c=.o)
 
-SHADERS := $(wildcard $(SHADERDIR)/*.glsl)
-SHADERS_H := $(SHADERS:.glsl=.glsl.h)
+#SHADERS := $(wildcard $(SHADERDIR)/*.glsl)
+#SHADERS_H := $(SHADERS:.glsl=.glsl.h)
 
 CPPFLAGS += -Dmain=SDL_main
 
@@ -40,19 +40,20 @@ $(BIN): clean
 	mkdir $(BIN)
 	cp $(DLLS)/SDL2.dll $(BIN)
 	cp $(DLLS)/glew32.dll $(BIN)
+	cp -r res/ $(BIN)
 
 winzip: win32
 	cd $(BIN) && zip $(basename $(notdir $(TARGET))).zip *
 
 
-$(TARGET): $(SHADERS_H) $(OBJECTS)
+$(TARGET): $(OBJECTS)
 	$(CC) $(CPPFLAGS) $(CFLAGS) -o $(TARGET) $(OBJECTS) $(LDFLAGS)
 
-%.o: %.c %.h $(SHADERS_H)
+%.o: %.c %.h
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-%.glsl.h: %.glsl
-	sed -e "s/\\/\\\\/g;s/\"/\\\"/g;s/ /\\t/g;s/^/\"/;s/$$/\\n\"/" $< > $@
+#%.glsl.h: %.glsl
+#	sed -e "s/\\/\\\\/g;s/\"/\\\"/g;s/ /\\t/g;s/^/\"/;s/$$/\\n\"/" $< > $@
 
 clean:
 	rm -fr $(TARGET) $(OBJECTS) $(SHADERS_H) $(BIN)
