@@ -10,6 +10,8 @@
 #include "shaders.h"
 #include "dbg.h"
 
+float time_mod = 1.0f;
+
 Game * Game__new__()
 {
     Game * self = malloc(sizeof(Game));
@@ -21,7 +23,7 @@ Game * Game__new__()
     self->error = 0;
     self->running = true;
     self->pause = 0;
-    self->time_mod = SDL_GetTicks() / 150.0f;
+    self->time_mod = time_mod;
 
     Game__init__(self);
 
