@@ -25,7 +25,7 @@ OBJECTS := $(SOURCES:.c=.o)
 
 CPPFLAGS += -Dmain=SDL_main
 
-LDFLAGS =  -lmingw32 -mwindows
+LDFLAGS =  -lmingw32 -mwindows -mconsole
 LDFLAGS += -lSDL2main -lSDL2
 LDFLAGS += -lopengl32
 LDFLAGS += -lm
