@@ -12,12 +12,11 @@
 
 typedef struct Game {
     bool running;
-    int error, pause;
+    int error;
     Shader     * vs, * fs;
     ShaderProg * sp;
     GLuint vao, vbo;
     GLuint uni_time;
-    GLfloat time_mod;
 } Game;
 
 /*** Special Methods ***/
