@@ -10,10 +10,12 @@
 void at_exit()
 {
     SDL_Quit();
+
 #ifdef _WIN32
     puts("Press [ENTER] to close.");
     getchar();
 #endif
+
 }
 
 int main(int argc, char * argv[])

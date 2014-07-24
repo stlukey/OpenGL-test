@@ -10,7 +10,7 @@
 
 typedef struct Shader {
     GLenum         type;
-    const GLchar * src;
+    GLchar *       src;
     
     int            error;
 
@@ -18,13 +18,15 @@ typedef struct Shader {
 } Shader;
 
 /*** Special Methods ***/
-Shader * Shader__new__ (GLenum type,
-                        const GLchar * src);  /* NEW(game) */
+Shader * Shader__new__ (GLenum type, GLchar * src);  /* NEW(game) */
 void     Shader__init__(Shader * self);
-void     Shader__del__ (Shader * self);       /* DEL(game, self) */
+void     Shader__del__ (Shader * self);        /* DEL(game, self) */
+
+/*** Public Methods ***/
+void     shader_compile(Shader * self);
 
 /*** Static Methods ***/
-const GLchar * shader_getsrc (char * filename);
+GLchar * shader_getsrc (char * filename);
 
 
 /*******************************************************************

@@ -10,13 +10,12 @@
 /*******************************************************************
  *                        Shader Methods                           *
  *******************************************************************/
-Shader * Shader__new__(GLenum type,
-                       const GLchar * src)
+Shader * Shader__new__(GLenum type, GLchar * src)
 {
     Shader * self = malloc(sizeof(Shader));
     
     self->type  = type;
-    self->src   = src;
+    self->src   = (GLchar *)src;
     self->error = 0;
     self->ptr   = 0;
 
@@ -28,7 +27,21 @@ Shader * Shader__new__(GLenum type,
 void Shader__init__(Shader * self)
 {
     self->ptr = glCreateShader(self->type);
-    glShaderSource(self->ptr, 1, &self->src, NULL);
+    shader_compile(self);
+}
+
+void Shader__del__(Shader * self)
+{
+   if( self->ptr != 0 )
+       glDeleteShader(self->ptr);
+
+   free(self);
+}
+
+void shader_compile(Shader * self)
+{
+    glShaderSource(self->ptr, 1, 
+                   (const GLchar **)&self->src, NULL);
     glCompileShader(self->ptr);
 
     int result = 0;
@@ -48,18 +61,9 @@ void Shader__init__(Shader * self)
         }
         free(log);
     }
-
 }
 
-void Shader__del__(Shader * self)
-{
-   if( self->ptr != 0 )
-       glDeleteShader(self->ptr);
-
-   free(self);
-}
-
-const GLchar * shader_getsrc(char * shadername)
+GLchar * shader_getsrc(char * shadername)
 {
     const char * prefix = SHADERS_PATH;
     size_t s_len = strlen(shadername);
@@ -85,7 +89,7 @@ const GLchar * shader_getsrc(char * shadername)
         src[len] = '\0';
     }
 
-    return (const GLchar *)src;
+    return (GLchar *)src;
 }
 
 /*******************************************************************

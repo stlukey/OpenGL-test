@@ -32,6 +32,7 @@ void game_draw                    (Game * self);
 
 /*** Private Methods ***/
 void game__end                    (Game * self);
+void game__shaders_reload         (Game * self);
 void game__load_vertex_data       (Game * self);
 void game__set_vertex_data_layout (Game * self);
 void game__set_uniforms           (Game * self);

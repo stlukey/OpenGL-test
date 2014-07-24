@@ -30,11 +30,11 @@ Game * Game__new__()
 
 void Game__init__(Game * self)
 {
-    const GLchar * vert_src = shader_getsrc("vs.glsl");
+    GLchar * vert_src = shader_getsrc("vs.glsl");
     check(vert_src != NULL,
           "Could not load vertex shader source code.");
 
-    const GLchar * frag_src = shader_getsrc("fs.glsl");
+    GLchar * frag_src = shader_getsrc("fs.glsl");
     check(vert_src != NULL,
           "Could not load fragment shader source code.");
 
@@ -101,9 +101,8 @@ void game_events(Game * self)
             case SDLK_ESCAPE:
                 return game__end(self);
             case SDLK_F5:
-                log_info("Restarting game...");
-                DEL(Game, self);
-                self = NEW(Game);
+                log_info("Reloading shader...");
+                game__shaders_reload(self);
         }
         key = 0;
     }
@@ -170,3 +169,28 @@ void game__set_uniforms(Game * self)
     self->uni_time = shader_prog_uniform(self->sp, "time_mod");
 }
 
+void game__shaders_reload(Game * self)
+{
+    self->vs->src = NULL;
+    self->vs->src = shader_getsrc("vs.glsl");
+    check(self->vs->src != NULL,
+          "Could not load vertex shader source code.");
+
+
+    self->fs->src = NULL;
+    self->fs->src = shader_getsrc("fs.glsl");
+    check(self->fs->src != NULL,
+          "Could not load fragment shader source code.");
+
+    shader_compile(self->vs);
+    shader_compile(self->fs);
+
+    shader_prog_link(self->sp);
+    shader_prog_use(self->sp);
+
+    return;
+
+
+error:
+    self->error = 1;
+}

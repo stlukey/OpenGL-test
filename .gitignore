@@ -2,4 +2,5 @@
 *.o
 *.glsl.h
 OpenGL-test
+bin
 
