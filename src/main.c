@@ -7,6 +7,14 @@
 
 #include "game.h"
 
+void at_exit()
+{
+    SDL_Quit();
+#ifdef _WIN32
+    puts("Press [ENTER] to close.");
+    getchar();
+#endif
+}
 
 int main(int argc, char * argv[])
 {
@@ -18,7 +26,7 @@ int main(int argc, char * argv[])
 
 
     SDL_Init(SDL_INIT_VIDEO);
-    atexit(SDL_Quit);
+    atexit(at_exit);
 
     CONFIG_GL_SET_ATTRS();
 
@@ -56,7 +64,6 @@ int main(int argc, char * argv[])
     DEL(Game, g);
     SDL_GL_DeleteContext(context);
     SDL_DestroyWindow(window);
-
 
     return EXIT_SUCCESS;
 

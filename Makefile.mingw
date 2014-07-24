@@ -1,5 +1,4 @@
 # Makefile
-
 CC = gcc
 
 CFLAGS += -O3
@@ -42,8 +41,7 @@ $(BIN): clean
 	cp $(DLLS)/glew32.dll $(BIN)
 	cp -r res/ $(BIN)
 
-winzip: win32
-	cd $(BIN) && zip $(basename $(notdir $(TARGET))).zip *
+#zip -r $(BIN)/$(basename $(notdir $(TARGET))).zip $(BIN)/*
 
 
 $(TARGET): $(OBJECTS)
