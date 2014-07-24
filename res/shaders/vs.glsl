@@ -1,4 +1,4 @@
-#version 120
+#version 130
 uniform vec4 time_mod;
 
 in vec2 position;
