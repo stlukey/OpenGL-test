@@ -28,6 +28,10 @@ OBJECTS := $(SOURCES:.c=.o)
 DEPS += linmath.h
 DEPS := $(addprefix $(EXT)/, $(DEPS))
 
+run: $(TARGET)
+	./$(TARGET)
+
+
 $(TARGET): $(DEPS) $(OBJECTS)
 	$(CC) $(CPPFLAGS) $(CFLAGS) -o $(TARGET) $(OBJECTS) $(LDFLAGS)
 

@@ -50,7 +50,7 @@ void shader_compile(Shader * self)
     int log_len = 0;
     glGetShaderiv(self->ptr, GL_INFO_LOG_LENGTH, &log_len);
 
-    if( log_len > 0 ) {
+    if( log_len > 1 ) {
         char * log = malloc(log_len);
         glGetShaderInfoLog(self->ptr, log_len, NULL, log);
         if( result == GL_FALSE ) {
