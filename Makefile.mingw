@@ -13,7 +13,6 @@ LDFLAGS += -lGLEW
 TARGET = OpenGL-test
 
 SRC = src
-BIN = bin
 SHADERDIR = $(SRC)/shaders
 
 SOURCES := $(wildcard $(SRC)/*.c)
@@ -25,21 +24,18 @@ OBJECTS := $(SOURCES:.c=.o)
 CPPFLAGS += -Dmain=SDL_main
 
 LDFLAGS =  -lmingw32 -mwindows -mconsole
+LDFLAGS += -lSOIL
 LDFLAGS += -lSDL2main -lSDL2
 LDFLAGS += -lopengl32
 LDFLAGS += -lm
 LDFLAGS += -lglew32
 
 DLLS = /MinGW/mingw32/bin
-TARGET := bin/$(TARGET).exe
+TARGET := $(TARGET).exe
 
-win32: $(BIN) $(DLL) $(TARGET)
-
-$(BIN): clean
-	mkdir $(BIN)
-	cp $(DLLS)/SDL2.dll $(BIN)
-	cp $(DLLS)/glew32.dll $(BIN)
-	cp -r res/ $(BIN)
+win32: $(DLL) $(TARGET)
+	cp $(DLLS)/SDL2.dll .
+	cp $(DLLS)/glew32.dll .
 
 #zip -r $(BIN)/$(basename $(notdir $(TARGET))).zip $(BIN)/*
 
@@ -54,5 +50,5 @@ $(TARGET): $(OBJECTS)
 #	sed -e "s/\\/\\\\/g;s/\"/\\\"/g;s/ /\\t/g;s/^/\"/;s/$$/\\n\"/" $< > $@
 
 clean:
-	rm -fr $(TARGET) $(OBJECTS) $(SHADERS_H) $(BIN)
+	rm -fr $(TARGET) $(OBJECTS) $(SHADERS_H) *.dll *.exe
 

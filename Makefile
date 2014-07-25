@@ -9,6 +9,7 @@ CFLAGS += -Werror
 CPPFLAGS += -Iext/linmath.h
 
 LDFLAGS += -lSDL2
+LDFLAGS += -lSOIL
 LDFLAGS += -lGL
 LDFLAGS += -lm
 LDFLAGS += -lGLEW

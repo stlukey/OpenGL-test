@@ -1,3 +1,5 @@
+#ifndef _CONFIG_H_
+#define _CONFIG_H_
 
 #define TITLE "OpenGL test"
 
@@ -17,4 +19,6 @@
 
 #define RES_PATH "res/"
 #define SHADERS_PATH RES_PATH "shaders/"
+#define IMAGES_PATH RES_PATH "images/"
 
+#endif // _CONFIG_H_
