@@ -5,7 +5,7 @@
 
 #include <SDL2/SDL.h>
 #include <GL/glew.h>
-#include <SOIL.h>
+#include <SOIL/SOIL.h>
 
 #include "config.h"
 
