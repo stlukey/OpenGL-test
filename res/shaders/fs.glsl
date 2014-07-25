@@ -29,9 +29,9 @@ void main()
     vec4 t1 = texture(tex1, Texcoord);
 
     out_color = mix(t0, t1, 0.4) *   vec4(sin(d + time),
-                                              sin(d + time * 1.2),
-                                              sin(d+ time * 1.3),
-                                              1.0);
+                                          sin(d + time * 1.2),
+                                          sin(d+ time * 1.3),
+                                          1.0);
 }
 
 

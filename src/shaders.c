@@ -72,6 +72,8 @@ GLchar * shader_getsrc(char * shadername)
     memcpy(filename, prefix, p_len);
     memcpy(filename + p_len, shadername, s_len + 1);
 
+    log_info("Loading shader from: %s", filename);
+
     char * src = NULL;
     FILE * fp =  fopen(filename, "rb");
     free(filename);

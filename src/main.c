@@ -35,11 +35,11 @@ int main(int argc, char * argv[])
 
     window = SDL_CreateWindow(TITLE, POS, SIZE,SDL_WINDOW_OPENGL);
     check( window != NULL,
-          "Could not create window: %s\n", SDL_GetError());
+          "Could not create window: %s", SDL_GetError());
 
     context = SDL_GL_CreateContext(window);
     check( window != NULL,
-          "SDL failed to create GL context: %s\n", SDL_GetError());
+          "SDL failed to create GL context: %s", SDL_GetError());
 
 
     glewExperimental = GL_TRUE;

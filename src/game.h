@@ -34,7 +34,10 @@ void game_draw                    (Game * self);
 /*** Private Methods ***/
 void game__end                    (Game * self);
 void game__shaders_reload         (Game * self);
-void game__load_texture           (Game * self);
+void game__load_tex_image         (Game * self,
+                                    int tex_num,
+                                    const char * imagename);
+void game__load_textures          (Game * self);
 void game__load_element_data      (Game * self);
 void game__load_vertex_data       (Game * self);
 void game__set_vertex_data_layout (Game * self);

@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <math.h>
+#include <string.h>
 
 #include <SDL2/SDL.h>
 #include <GL/glew.h>
@@ -35,7 +36,7 @@ Game * Game__new__()
 
 void Game__init__(Game * self)
 {
-    game__load_texture(self);
+    game__load_textures(self);
 
     GLchar * vert_src = shader_getsrc("vs.glsl");
     check(vert_src != NULL,
@@ -144,20 +145,13 @@ void game__end(Game * self)
     self->running = false;
 }
 
-void game__load_texture(Game * self)
+
+void game__load_textures(Game * self)
 {
     glGenTextures(2, self->textures);
 
-    int w, h;
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, self->textures[0]);
-    unsigned char * image = SOIL_load_image(IMAGES_PATH "image.png",
-                                            &w, &h,
-                                            0, SOIL_LOAD_RGB);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB,
-                 GL_UNSIGNED_BYTE, image);
-    SOIL_free_image_data(image);
-
+    game__load_tex_image(self, 0, "image.png");
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -165,19 +159,35 @@ void game__load_texture(Game * self)
 
 
     glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, self->textures[1]);
-    image = SOIL_load_image(IMAGES_PATH "image2.png",
-                            &w, &h,
-                            0, SOIL_LOAD_RGB);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB,
-                 GL_UNSIGNED_BYTE, image);
-    SOIL_free_image_data(image);
-
+    game__load_tex_image(self, 1, "image2.png");
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+}
 
+void game__load_tex_image(Game * self,
+                           int tex_num,
+                           const char * imagename)
+{
+    const char * prefix = IMAGES_PATH;
+    size_t s_len = strlen(imagename);
+    size_t p_len = strlen(prefix);
+    char * filename = malloc(s_len + p_len + 1);
+    memcpy(filename, prefix, p_len);
+    memcpy(filename + p_len, imagename, s_len + 1);
+
+    log_info("Loading texture from: %s", filename);
+
+    int w =0, h = 0;
+    glBindTexture(GL_TEXTURE_2D, self->textures[tex_num]);
+    unsigned char * image = SOIL_load_image(filename,
+                                            &w, &h,
+                                            0, SOIL_LOAD_RGB);
+    free(filename);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB,
+                 GL_UNSIGNED_BYTE, image);
+    SOIL_free_image_data(image);
 }
 
 void game__load_element_data(Game * self)
