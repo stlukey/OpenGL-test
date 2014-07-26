@@ -1,5 +1,5 @@
 # Makefile
-CC = gcc
+CC ?= gcc
 
 CFLAGS += -O3
 CFLAGS += -Wall
@@ -44,7 +44,7 @@ $(TARGET): $(OBJECTS)
 	$(CC) $(CPPFLAGS) $(CFLAGS) -o $(TARGET) $(OBJECTS) $(LDFLAGS)
 
 %.o: %.c %.h
-	$(CC) $(CFLAGS) -c -o $@ $<
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
 
 #%.glsl.h: %.glsl
 #	sed -e "s/\\/\\\\/g;s/\"/\\\"/g;s/ /\\t/g;s/^/\"/;s/$$/\\n\"/" $< > $@

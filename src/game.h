@@ -2,6 +2,7 @@
 #define _GAME_H_
 
 #include <stdbool.h>
+#include <GL/glew.h>
 
 #include "objects.h"
 #include "shaders.h"
@@ -10,13 +11,18 @@
  *                          Game Object                            *
  *******************************************************************/
 
+struct Uniforms {
+    GLuint time;
+};
+
+
 typedef struct Game {
     bool running;
     int error;
     Shader     * vs, * fs;
     ShaderProg * sp;
     GLuint vao, vbo, ebo;
-    GLuint uni_time;
+    struct Uniforms uniforms;
     GLuint textures[2];
 } Game;
 

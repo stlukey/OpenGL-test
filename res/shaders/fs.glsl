@@ -1,6 +1,6 @@
 #version 130
 
-uniform vec4 time_mod;
+uniform vec4 time;
 uniform sampler2D tex0;
 uniform sampler2D tex1;
 
@@ -20,17 +20,17 @@ void main()
 
     pos = rotate(pos);
 
-    vec2 f = floor(pos * time_mod.w);
+    vec2 f = floor(pos * time.w);
 
     float d = f.x + f.y;
-    float time = time_mod.w;
+    float Time = time.y;
 
     vec4 t0 = texture(tex0, Texcoord);
     vec4 t1 = texture(tex1, Texcoord);
 
-    out_color = mix(t0, t1, 0.4) *   vec4(sin(d + time),
-                                          sin(d + time * 1.2),
-                                          sin(d+ time * 1.3),
+    out_color = mix(t0, t1, 0.4) *   vec4(sin(d + Time),
+                                          sin(d + Time * 1.2),
+                                          sin(d + Time * 1.3),
                                           1.0);
 }
 
