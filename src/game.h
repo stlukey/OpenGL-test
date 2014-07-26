@@ -2,6 +2,7 @@
 #define _GAME_H_
 
 #include <stdbool.h>
+#include <GL/glew.h>
 
 #include "objects.h"
 #include "shaders.h"

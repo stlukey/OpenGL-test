@@ -167,8 +167,8 @@ void game__load_textures(Game * self)
 }
 
 void game__load_tex_image(Game * self,
-                           int tex_num,
-                           const char * imagename)
+                          int tex_num,
+                          const char * imagename)
 {
     const char * prefix = IMAGES_PATH;
     size_t s_len = strlen(imagename);
