@@ -1,5 +1,5 @@
 # Makefile
-CC = gcc
+CC ?= gcc
 
 CFLAGS += -O3
 CFLAGS += -Wall
