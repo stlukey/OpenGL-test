@@ -43,7 +43,10 @@ void Shader__del__(Shader * self)
    free(self);
 }
 
-void shader_compile(Shader * self)
+void 
+
+
+shader_compile(Shader * self)
 {
     glShaderSource(self->ptr, 1, 
                    (const GLchar **)&self->src, NULL);

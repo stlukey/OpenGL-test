@@ -7,10 +7,10 @@
 #include <SDL2/SDL.h>
 #include <GL/glew.h>
 #include <SOIL/SOIL.h>
-#include <linmath.h>
 
 #include "config.h"
 
+#include "glslmath.h"
 #include "game.h"
 #include "shaders.h"
 #include "dbg.h"
@@ -138,6 +138,9 @@ void game_update(Game * self)
     glUniform4f(self->uniforms.time, time_mod,
                 time_mod, time_mod,
                 SDL_GetTicks()/ 60.f);
+
+    mat4 trans = MAT4_Z_ROTATE(M_PI);
+    glUniformMatrix4fv(self->uniforms.trans, 1, GL_FALSE, *trans);
 }
 
 void game_draw(Game * self)
@@ -252,12 +255,18 @@ void game__set_vertex_data_layout(Game * self)
                           7 * sizeof(GLfloat), (void *)(5 * sizeof(GLfloat)));
 }
 
+
+
+
 void game__set_uniforms(Game * self)
 {
-    struct Uniforms * uniforms = &self->uniforms;
-    uniforms->time = shader_prog_uniform(self->sp, "time");
+    self->uniforms.time = shader_prog_uniform(self->sp, "time");
     glUniform1i(shader_prog_uniform(self->sp, "tex0"), 0);
     glUniform1i(shader_prog_uniform(self->sp, "tex1"), 1);
+
+
+    self->uniforms.trans = shader_prog_uniform(self->sp, "trans");
+
 }
 
 void game__shaders_reload(Game * self)
