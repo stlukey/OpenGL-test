@@ -26,6 +26,9 @@ int main(int argc, char * argv[])
     SDL_GLContext   context = NULL;
     Game          * g       = NULL;
 
+#ifdef _WIN32
+    DBG_WIN32_INIT();
+#endif
 
     SDL_Init(SDL_INIT_VIDEO);
     atexit(at_exit);
