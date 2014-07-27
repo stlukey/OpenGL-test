@@ -22,7 +22,6 @@ else
 	ifeq ($(firstword $(MAKECMDGOALS)), $(TARGET).exe)
 		PLATFORM := MinGW
 	else
-		# non win
 		CFLAGS += -fpic
 		LDFLAGS += -lGL
 		LDFLAGS += -lGLEW
