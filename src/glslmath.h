@@ -16,20 +16,20 @@ typedef vec4 mat4[4];
                 {0, 0, 1, 0},\
                 {0, 0, 0, 1}}
 
-#define MAT4_X_ROTATE(deg) {{1.0f,  0.0f,     0.0f,      0.0f},\
-                            {0.0f,  cos(deg), -sin(deg), 0.0f},\
-                            {0.0f,  sin(deg), cos(deg),  0.0f},\
-                            {0.0f,  0.0f,     0.0f,      1.0f}}
+#define MAT4_X_ROTATE(rads) {{1.0f,  0.0f,     0.0f,       0.0f},\
+                            {0.0f,  cos(rads), -sin(rads), 0.0f},\
+                            {0.0f,  sin(rads), cos(rads),  0.0f},\
+                            {0.0f,  0.0f,      0.0f,       1.0f}}
 
-#define MAT4_Y_ROTATE(deg) {{cos(deg),   0.0f,  sin(deg), 0.0f},\
-                            {0.0f,       1.0f,  0.0f,     0.0f},\
-                            {-sin(deg),  0.0f,  cos(deg), 0.0f},\
-                            {0.0f,       0.0f,  0.0f,     1.0f}}
+#define MAT4_Y_ROTATE(rads) {{cos(rads),   0.0f,  sin(rads), 0.0f},\
+                            {0.0f,       1.0f,  0.0f,        0.0f},\
+                            {-sin(rads),  0.0f,  cos(rads),  0.0f},\
+                            {0.0f,       0.0f,  0.0f,        1.0f}}
 
-#define MAT4_Z_ROTATE(deg) {{cos(deg),   -sin(deg), 0.0f, 0.0f},\
-                            {sin(deg),   cos(deg),  0.0f, 0.0f},\
-                            {0.0f,       0.0f,      1.0f, 0.0f},\
-                            {0.0f,       0.0f,      0.0f, 1.0f}}
+#define MAT4_Z_ROTATE(rads) {{cos(rads), -sin(rads), 0.0f, 0.0f},\
+                            {sin(rads),  cos(rads),  0.0f, 0.0f},\
+                            {0.0f,       0.0f,       1.0f, 0.0f},\
+                            {0.0f,       0.0f,       0.0f, 1.0f}}
 
 static inline void mat4_mul_mat4(mat4 a, mat4 b)
 {
@@ -39,21 +39,21 @@ static inline void mat4_mul_mat4(mat4 a, mat4 b)
     a[3][0]*=b[3][0]; a[3][1]*=b[3][1]; a[3][2]*=b[3][2]; a[3][3]*=b[3][3];
 }
 
-static inline void mat4_x_rotate(mat4 a, GLfloat deg)
+static inline void mat4_x_rotate(mat4 a, GLfloat rads)
 {
-    mat4 trans = MAT4_X_ROTATE(deg);
+    mat4 trans = MAT4_X_ROTATE(rads);
     mat4_mul_mat4(a, trans);
 }
 
-static inline void mat4_y_rotate(mat4 a, GLfloat deg)
+static inline void mat4_y_rotate(mat4 a, GLfloat rads)
 {
-    mat4 trans = MAT4_Y_ROTATE(deg);
+    mat4 trans = MAT4_Y_ROTATE(rads);
     mat4_mul_mat4(a, trans);
 }
 
-static inline void mat4_z_rotate(mat4 a, GLfloat deg)
+static inline void mat4_z_rotate(mat4 a, GLfloat rads)
 {
-    mat4 trans = MAT4_Z_ROTATE(deg);
+    mat4 trans = MAT4_Z_ROTATE(rads);
     mat4_mul_mat4(a, trans);
 }
 
