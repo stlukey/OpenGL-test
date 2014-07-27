@@ -33,10 +33,10 @@ typedef vec4 mat4[4];
 
 static inline void mat4_mul_mat4(mat4 a, mat4 b)
 {
-    a[0][0]*=b[0][0]; a[0][1]*=b[0][1]; a[0][2]*=b[0][2]; a[0][3]*=b[0][3];
-    a[1][0]*=b[1][0]; a[1][1]*=b[1][1]; a[1][2]*=b[1][2]; a[1][3]*=b[1][3];
-    a[2][0]*=b[2][0]; a[2][1]*=b[2][1]; a[2][2]*=b[2][2]; a[2][3]*=b[2][3];
-    a[3][0]*=b[3][0]; a[3][1]*=b[3][1]; a[3][2]*=b[3][2]; a[3][3]*=b[3][3];
+    int i, j;
+    for( i = 0; i < 3; ++i )
+        for( j = 0; j < 3; ++j )
+            a[i][j] *= b[i][j];
 }
 
 static inline void mat4_x_rotate(mat4 a, GLfloat rads)

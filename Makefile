@@ -35,17 +35,11 @@ endif
 # Project dirs.
 SRC := src
 BIN := bin
-EXT := ext
 
 # For ever $(SRC)/*.c the object file
 # is $(SRC)/*.o
 SOURCES := $(wildcard $(SRC)/*.c)
 OBJECTS := $(SOURCES:.c=.o)
-
-# Git submodule libs from $(EXT)/
-CPPFLAGS += -I$(EXT)/linmath.h
-DEPS += $(addsuffix /.git, $(addprefix $(EXT)/,\
-							linmath.h))
 
 $(TARGET): $(DEPS) $(OBJECTS) $(DLLS)
 	$(CC) -o $(TARGET) $(OBJECTS) $(LDFLAGS)
@@ -59,10 +53,6 @@ $(TARGET): $(DEPS) $(OBJECTS) $(DLLS)
 # dir as .exe
 %.dll: $(DLL)/%.dll
 	cp $(DLL)/$@ .
-
-# Some libs are downloaded through git submodules.
-$(EXT)/%/.git: $(EXT)/%
-	git submodule update --init $<
 
 # Although $(DLLS) is platform specific, other
 # platforms replace it with nothing as it is
