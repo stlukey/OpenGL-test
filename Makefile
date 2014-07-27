@@ -56,7 +56,6 @@ ifdef DLL
 	cp $(addprefix $(DLL)/, $(DLLS)) .
 endif
 
-
 # Compile object files separately to prevent
 # unnecessarily recompilation.
 %.o: %.c %.h
