@@ -29,7 +29,7 @@ else
 endif
 
 # If there are any platform specific
-# configurations store them in Makefile.$(PLATFORM).
+# configurations store them in Makefile.$(PLATFORM)
 -include ${CURDIR}/Makefile.$(PLATFORM)
 
 # Project dirs.
@@ -47,19 +47,18 @@ CPPFLAGS += -I$(EXT)/linmath.h
 DEPS += $(addsuffix /.git, $(addprefix $(EXT)/,\
 							linmath.h))
 
-$(TARGET): $(DEPS) $(OBJECTS) 
+$(TARGET): $(DEPS) $(OBJECTS) $(DLLS)
 	$(CC) -o $(TARGET) $(OBJECTS) $(LDFLAGS)
-
-# Windows requires *.dll in same
-# dir as .exe
-ifdef DLL
-	cp $(addprefix $(DLL)/, $(DLLS)) .
-endif
 
 # Compile object files separately to prevent
 # unnecessarily recompilation.
 %.o: %.c %.h
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
+
+# Windows requires *.dll in same
+# dir as .exe
+%.dll: $(DLL)/%.dll
+	cp $(DLL)/$@ .
 
 # Some libs are downloaded through git submodules.
 $(EXT)/%/.git: $(EXT)/%

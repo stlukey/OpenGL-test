@@ -13,6 +13,8 @@
 Shader * Shader__new__(GLenum type, GLchar * src)
 {
     Shader * self = malloc(sizeof(Shader));
+    check(self != NULL,
+          "Could not allocate memory for Shader.");
     
     self->type  = type;
     self->src   = (GLchar *)src;
@@ -22,6 +24,9 @@ Shader * Shader__new__(GLenum type, GLchar * src)
     Shader__init__(self);
 
     return self;
+
+error:
+    return NULL;
 }
 
 void Shader__init__(Shader * self)
@@ -105,6 +110,8 @@ ShaderProg * ShaderProg__new__(GLuint * vao,
                                Shader * gs)
 {
     ShaderProg * self = malloc(sizeof(ShaderProg));
+    check(self != NULL,
+          "Could not allocate memory for ShaderProg.");
 
     self->vao   = vao; self->vbo = vbo;
     self->vs    = vs;  self->fs  = fs;
@@ -115,6 +122,9 @@ ShaderProg * ShaderProg__new__(GLuint * vao,
     ShaderProg__init__(self);
 
     return self;
+
+error:
+    return NULL;
 }
 
 void ShaderProg__init__(ShaderProg * self)

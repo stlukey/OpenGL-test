@@ -50,7 +50,7 @@ int main(int argc, char * argv[])
 
     g = NEW(Game);
     check( (g != NULL) && (g->error == 0),
-           "Failed to create game.");
+           "Errors occurred during the creation of Game.");
 
 
     // Main game loop.

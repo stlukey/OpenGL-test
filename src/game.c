@@ -18,6 +18,8 @@
 Game * Game__new__()
 {
     Game * self = malloc(sizeof(Game));
+    check(self != NULL,
+          "Could not allocate memory for Game.");
     
     self->vs = NULL; self->fs = NULL;
     self->sp = NULL;
@@ -31,8 +33,10 @@ Game * Game__new__()
     
     Game__init__(self);
 
-
     return self;
+
+error:
+    return NULL;
 }
 
 void Game__init__(Game * self)
@@ -51,13 +55,21 @@ void Game__init__(Game * self)
     game__load_element_data(self);
     
     self->vs = NEW(Shader, GL_VERTEX_SHADER, vert_src);
+    check(self->vs != NULL,
+          "Failed to create Vertex Shader.");
+
     self->fs = NEW(Shader, GL_FRAGMENT_SHADER, frag_src);
+    check(self->fs != NULL,
+          "Failed to create Fragment Shader.");
 
     self->sp = NEW(ShaderProg, &self->vao,
                                &self->vbo,
                                self->vs,
                                self->fs,
                                NULL);
+    check(self->sp != NULL,
+          "Failed to create ShaderProg.");
+
     glBindFragDataLocation(self->sp->ptr, 0, "out_color");
     shader_prog_link(self->sp);
     shader_prog_use(self->sp);
