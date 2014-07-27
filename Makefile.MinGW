@@ -1,54 +1,13 @@
-# Makefile
-CC ?= gcc
-
-CFLAGS += -O3
-CFLAGS += -Wall
-CFLAGS += -Werror
-
-LDFLAGS += -lSDL2
-LDFLAGS += -lGL
-LDFLAGS += -lm
-LDFLAGS += -lGLEW
-
-TARGET = OpenGL-test
-
-SRC = src
-SHADERDIR = $(SRC)/shaders
-
-SOURCES := $(wildcard $(SRC)/*.c)
-OBJECTS := $(SOURCES:.c=.o)
-
-#SHADERS := $(wildcard $(SHADERDIR)/*.glsl)
-#SHADERS_H := $(SHADERS:.glsl=.glsl.h)
+# Makefile MinGW
 
 CPPFLAGS += -Dmain=SDL_main
 
-LDFLAGS =  -lmingw32 -mwindows -mconsole
-LDFLAGS += -lSOIL
-LDFLAGS += -lSDL2main -lSDL2
+LDFLAGS := -lmingw32 -mwindows -mconsole -lSDL2main $(LDFLAGS)
 LDFLAGS += -lopengl32
-LDFLAGS += -lm
 LDFLAGS += -lglew32
 
-DLLS = /MinGW/mingw32/bin
+DLL = /MinGW/mingw32/bin
+DLLS += SDL2.dll
+DLLS += glew32.dll
+
 TARGET := $(TARGET).exe
-
-win32: $(DLL) $(TARGET)
-	cp $(DLLS)/SDL2.dll .
-	cp $(DLLS)/glew32.dll .
-
-#zip -r $(BIN)/$(basename $(notdir $(TARGET))).zip $(BIN)/*
-
-
-$(TARGET): $(OBJECTS)
-	$(CC) $(CPPFLAGS) $(CFLAGS) -o $(TARGET) $(OBJECTS) $(LDFLAGS)
-
-%.o: %.c %.h
-	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
-
-#%.glsl.h: %.glsl
-#	sed -e "s/\\/\\\\/g;s/\"/\\\"/g;s/ /\\t/g;s/^/\"/;s/$$/\\n\"/" $< > $@
-
-clean:
-	rm -fr $(TARGET) $(OBJECTS) $(SHADERS_H) *.dll *.exe
-
