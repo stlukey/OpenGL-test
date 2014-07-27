@@ -1,46 +1,76 @@
 # Makefile
 
-CC = gcc
+CC ?= gcc
+
+TARGET := OpenGL-test
 
 CFLAGS += -O3
 CFLAGS += -Wall
-CFLAGS += -Werror 
+CFLAGS += -Werror
 
-CPPFLAGS += -Iext/linmath.h
-
-LDFLAGS += -lSDL2
+# Non platform specific libs
 LDFLAGS += -lSOIL
-LDFLAGS += -lGL
+LDFLAGS += -lSDL2
 LDFLAGS += -lm
-LDFLAGS += -lGLEW
 
-TARGET = OpenGL-test
+# MinGW builds are default on windows on
+# other platforms make must be called via:
+# make $(TARGET).exe
+ifeq ($(OS), Windows_NT)
+	PLATFORM := MinGW
+else
+	ifeq ($(firstword $(MAKECMDGOALS)), $(TARGET).exe)
+		PLATFORM := MinGW
+	else
+		# non win
+		CFLAGS += -fpic
+		LDFLAGS += -lGL
+		LDFLAGS += -lGLEW
+	endif
+endif
 
-SRC = src
-BIN = bin
-EXT = ext
-SHADERDIR = $(SRC)/shaders
+# If there are any platform specific
+# configurations store them in Makefile.$(PLATFORM).
+-include ${CURDIR}/Makefile.$(PLATFORM)
 
+# Project dirs.
+SRC := src
+BIN := bin
+EXT := ext
+
+# For ever $(SRC)/*.c the object file
+# is $(SRC)/*.o
 SOURCES := $(wildcard $(SRC)/*.c)
 OBJECTS := $(SOURCES:.c=.o)
 
+# Git submodule libs from $(EXT)/
+CPPFLAGS += -I$(EXT)/linmath.h
+DEPS += $(addsuffix /.git, $(addprefix $(EXT)/,\
+							linmath.h))
 
-DEPS += linmath.h
-DEPS := $(addprefix $(EXT)/, $(DEPS))
+$(TARGET): $(DEPS) $(OBJECTS) 
+	$(CC) -o $(TARGET) $(OBJECTS) $(LDFLAGS)
 
-run: $(TARGET)
-	./$(TARGET)
+# Windows requires *.dll in same
+# dir as .exe
+ifdef DLL
+	cp $(addprefix $(DLL)/, $(DLLS)) .
+endif
 
 
-$(TARGET): $(DEPS) $(OBJECTS)
-	$(CC) $(CPPFLAGS) $(CFLAGS) -o $(TARGET) $(OBJECTS) $(LDFLAGS)
-
+# Compile object files separately to prevent
+# unnecessarily recompilation.
 %.o: %.c %.h
-	$(CC) -fpic $(CFLAGS) -c -o $@ $<
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
 
-ext/%:
-	git submodule update --init --recursive $@
+# Some libs are downloaded through git submodules.
+$(EXT)/%/.git: $(EXT)/%
+	git submodule update --init $<
 
+# Although $(DLLS) is platform specific, other
+# platforms replace it with nothing as it is
+# not defined.
+.PHONY: clean
 clean:
-	rm -fr $(TARGET) $(OBJECTS) $(SHADERS_H) $(BIN)
+	rm -fr $(TARGET) $(OBJECTS) $(DLLS)
 

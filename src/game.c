@@ -7,6 +7,7 @@
 #include <SDL2/SDL.h>
 #include <GL/glew.h>
 #include <SOIL/SOIL.h>
+#include <linmath.h>
 
 #include "config.h"
 
@@ -24,7 +25,7 @@ Game * Game__new__()
     self->ebo = 0;
     self->textures[0] = 0;
     self->textures[1] = 0;
-    self->uni_time = 0;
+    self->uniforms.time = 0;
     self->error = 0;
     self->running = true;
     
@@ -121,8 +122,8 @@ void game_update(Game * self)
 {
     if (self->error != 0 ) return;
     
-    GLfloat time_mod = sin(SDL_GetTicks() / 500.0f) + 0.5f;
-    glUniform4f(self->uni_time, time_mod,
+    GLfloat time_mod = pow(sin(SDL_GetTicks() / 500.0f)  * 1.35, 2);
+    glUniform4f(self->uniforms.time, time_mod,
                 time_mod, time_mod,
                 SDL_GetTicks()/ 60.f);
 }
@@ -241,7 +242,8 @@ void game__set_vertex_data_layout(Game * self)
 
 void game__set_uniforms(Game * self)
 {
-    self->uni_time = shader_prog_uniform(self->sp, "time_mod");
+    struct Uniforms * uniforms = &self->uniforms;
+    uniforms->time = shader_prog_uniform(self->sp, "time");
     glUniform1i(shader_prog_uniform(self->sp, "tex0"), 0);
     glUniform1i(shader_prog_uniform(self->sp, "tex1"), 1);
 }
