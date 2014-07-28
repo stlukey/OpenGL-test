@@ -8,12 +8,13 @@
 #include <GL/glew.h>
 #include <SOIL/SOIL.h>
 
-#include "config.h"
-
 #include "glslmath.h"
+
+#include "config.h"
+#include "dbg.h"
+
 #include "game.h"
 #include "shaders.h"
-#include "dbg.h"
 
 Game * Game__new__()
 {
@@ -139,7 +140,7 @@ void game_update(Game * self)
                 time_mod, time_mod,
                 SDL_GetTicks()/ 60.f);
 
-    mat4 trans = MAT4_Z_ROTATE(M_PI);
+    mat4 trans = MAT4_Z_ROTATE(SDL_GetTicks() / 1000.0f);
     glUniformMatrix4fv(self->uniforms.trans, 1, GL_FALSE, *trans);
 }
 
