@@ -140,16 +140,17 @@ void game_update(Game * self)
                 time_mod, time_mod,
                 SDL_GetTicks()/ 60.f);
 
-    mat4_t trans = mat4_identity(NULL);
+    mat4_t model = mat4_identity(NULL);
 
     float rads = SDL_GetTicks() / 10000.0f;
-    trans[0] = cos(rads);
-    trans[1] = -sin(rads);
-    trans[4] = sin(rads);
-    trans[5] = cos(rads);
+    model[0] = cos(rads);
+    model[1] = -sin(rads);
+    model[4] = sin(rads);
+    model[5] = cos(rads);
     
-    glUniformMatrix4dv(self->uniforms.trans, 1, GL_FALSE, trans);
-    free(trans);
+    glUniformMatrix4dv(self->uniforms.model, 1, GL_FALSE, model);
+    free(model);
+
 }
 
 void game_draw(Game * self)
@@ -274,7 +275,18 @@ void game__set_uniforms(Game * self)
     glUniform1i(shader_prog_uniform(self->sp, "tex1"), 1);
 
 
-    self->uniforms.trans = shader_prog_uniform(self->sp, "trans");
+    self->uniforms.model = shader_prog_uniform(self->sp, "model");
+
+    self->uniforms.view = shader_prog_uniform(self->sp, "view");
+    double eye[]    = {1.2, 1.2, 1.2},
+           center[] = {0.0, 0.0, 0.0},
+           up[]     = {0.0, 0.0, 1.0};
+    mat4_t view = mat4_lookAt(eye, center, up, NULL);
+    glUniformMatrix4dv(self->uniforms.view, 1, GL_FALSE, view);
+
+    self->uniforms.proj = shader_prog_uniform(self->sp, "proj");
+    mat4_t proj = mat4_perspective(45, 800/600, 1, 10, NULL);
+    glUniformMatrix4dv(self->uniforms.proj, 1, GL_FALSE, proj);
 
 }
 

@@ -13,7 +13,9 @@
 
 struct Uniforms {
     GLuint time,
-           trans;
+           model,
+           view,
+           proj;
 };
 
 
