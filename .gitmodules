@@ -1,3 +1,3 @@
-[submodule "ext/gl-matrix.c"]
+[submodule "ext/gl-matrix.c.git"]
 	path = ext/gl-matrix.c
 	url = https://github.com/o4dev/gl-matrix.c.git

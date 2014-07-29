@@ -13,6 +13,7 @@ LDFLAGS += -lSOIL
 LDFLAGS += -lSDL2
 LDFLAGS += -lm
 
+
 # MinGW builds are default on windows on
 # other platforms make must be called via:
 # make $(TARGET).exe
@@ -35,13 +36,18 @@ endif
 # Project dirs.
 SRC := src
 BIN := bin
+EXT := ext
 
 # For ever $(SRC)/*.c the object file
 # is $(SRC)/*.o
 SOURCES := $(wildcard $(SRC)/*.c)
 OBJECTS := $(SOURCES:.c=.o)
 
-$(TARGET): $(OBJECTS) $(DLLS)
+DEPS += $(EXT)/gl-matrix.c/libgl-matrix
+LDFLAGS += -l:$(EXT)/gl-matrix.c/libgl-matrix.a
+CPPFLAGS += -I$(EXT)/gl-matrix.c
+
+$(TARGET): $(DEPS) $(OBJECTS)
 	$(CC) -o $(TARGET) $(OBJECTS) $(LDFLAGS)
 
 # Compile object files separately to prevent
@@ -54,10 +60,14 @@ $(TARGET): $(OBJECTS) $(DLLS)
 %.dll: $(DLL)/%.dll
 	cp $(DLL)/$@ .
 
+$(EXT)/gl-matrix.c/libgl-matrix:
+	cd $(EXT)/gl-matrix.c && $(MAKE)
+
 # Although $(DLLS) is platform specific, other
 # platforms replace it with nothing as it is
 # not defined.
 .PHONY: clean
 clean:
-	rm -fr $(TARGET) $(OBJECTS) $(DLLS)
+	rm -fr $(TARGET) $(OBJECTS)
+	cd $(EXT)/gl-matrix.c && $(MAKE) clean
 

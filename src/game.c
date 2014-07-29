@@ -8,7 +8,7 @@
 #include <GL/glew.h>
 #include <SOIL/SOIL.h>
 
-#include "glslmath.h"
+#include <gl-matrix.h>
 
 #include "config.h"
 #include "dbg.h"
@@ -140,8 +140,16 @@ void game_update(Game * self)
                 time_mod, time_mod,
                 SDL_GetTicks()/ 60.f);
 
-    mat4 trans = MAT4_Z_ROTATE(SDL_GetTicks() / 1000.0f);
-    glUniformMatrix4fv(self->uniforms.trans, 1, GL_FALSE, *trans);
+    mat4_t trans = mat4_identity(NULL);
+
+    float rads = SDL_GetTicks() / 10000.0f;
+    trans[0] = cos(rads);
+    trans[1] = -sin(rads);
+    trans[4] = sin(rads);
+    trans[5] = cos(rads);
+    
+    glUniformMatrix4dv(self->uniforms.trans, 1, GL_FALSE, trans);
+    free(trans);
 }
 
 void game_draw(Game * self)
