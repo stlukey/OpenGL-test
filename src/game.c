@@ -288,7 +288,7 @@ void game__set_uniforms(Game * self)
     self->uniforms.proj = shader_prog_uniform(self->sp, "proj");
     mat4_t proj = mat4_perspective(45, 800/600, 1, 10, NULL);
     glUniformMatrix4dv(self->uniforms.proj, 1, GL_FALSE, proj);
-    free(view);
+    free(proj);
 
 }
 
