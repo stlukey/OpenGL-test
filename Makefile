@@ -63,11 +63,8 @@ $(TARGET): $(DEPS) $(OBJECTS)
 $(EXT)/gl-matrix.c/libgl-matrix.a:
 	cd $(EXT)/gl-matrix.c && $(MAKE)
 
-# Although $(DLLS) is platform specific, other
-# platforms replace it with nothing as it is
-# not defined.
 .PHONY: clean
 clean:
-	rm -fr $(TARGET) $(OBJECTS)
+	rm -fr $(TARGET) $(OBJECTS) $(DEPS)
 	cd $(EXT)/gl-matrix.c && $(MAKE) clean
 
