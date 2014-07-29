@@ -43,7 +43,7 @@ EXT := ext
 SOURCES := $(wildcard $(SRC)/*.c)
 OBJECTS := $(SOURCES:.c=.o)
 
-DEPS += $(EXT)/gl-matrix.c/libgl-matrix
+DEPS += $(EXT)/gl-matrix.c/libgl-matrix.a
 LDFLAGS += -l:$(EXT)/gl-matrix.c/libgl-matrix.a
 CPPFLAGS += -I$(EXT)/gl-matrix.c
 
@@ -60,7 +60,7 @@ $(TARGET): $(DEPS) $(OBJECTS)
 %.dll: $(DLL)/%.dll
 	cp $(DLL)/$@ .
 
-$(EXT)/gl-matrix.c/libgl-matrix:
+$(EXT)/gl-matrix.c/libgl-matrix.a:
 	cd $(EXT)/gl-matrix.c && $(MAKE)
 
 # Although $(DLLS) is platform specific, other
