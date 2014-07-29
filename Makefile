@@ -41,7 +41,7 @@ BIN := bin
 SOURCES := $(wildcard $(SRC)/*.c)
 OBJECTS := $(SOURCES:.c=.o)
 
-$(TARGET): $(DEPS) $(OBJECTS) $(DLLS)
+$(TARGET): $(OBJECTS) $(DLLS)
 	$(CC) -o $(TARGET) $(OBJECTS) $(LDFLAGS)
 
 # Compile object files separately to prevent

@@ -1,5 +1,8 @@
 # Makefile MinGW
 
+SHELL := cmd.exe
+MAKE  := "$(MAKE)"
+
 CPPFLAGS += -Dmain=SDL_main
 
 LDFLAGS := -lmingw32 -mwindows -mconsole -lSDL2main $(LDFLAGS)
