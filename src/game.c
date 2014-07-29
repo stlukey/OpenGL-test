@@ -283,10 +283,12 @@ void game__set_uniforms(Game * self)
            up[]     = {0.0, 0.0, 1.0};
     mat4_t view = mat4_lookAt(eye, center, up, NULL);
     glUniformMatrix4dv(self->uniforms.view, 1, GL_FALSE, view);
+    free(view);
 
     self->uniforms.proj = shader_prog_uniform(self->sp, "proj");
     mat4_t proj = mat4_perspective(45, 800/600, 1, 10, NULL);
     glUniformMatrix4dv(self->uniforms.proj, 1, GL_FALSE, proj);
+    free(view);
 
 }
 
